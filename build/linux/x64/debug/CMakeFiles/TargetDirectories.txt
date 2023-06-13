@@ -1,0 +1,14 @@
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/CMakeFiles/task_scheduler.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/CMakeFiles/edit_cache.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/CMakeFiles/rebuild_cache.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/CMakeFiles/list_install_components.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/CMakeFiles/install.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/CMakeFiles/install/local.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/CMakeFiles/install/strip.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/flutter/CMakeFiles/flutter_assemble.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/flutter/CMakeFiles/edit_cache.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/flutter/CMakeFiles/rebuild_cache.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/flutter/CMakeFiles/list_install_components.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/flutter/CMakeFiles/install.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/flutter/CMakeFiles/install/local.dir
+/home/yonatan/Desktop/3-2-semester/mobile/dating/task_scheduler/build/linux/x64/debug/flutter/CMakeFiles/install/strip.dir
