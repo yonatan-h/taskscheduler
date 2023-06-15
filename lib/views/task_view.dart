@@ -3,8 +3,19 @@ import 'package:task_scheduler/models/task.dart';
 
 class TaskView extends StatefulWidget {
   Task task;
+  VoidCallback onEditPressed;
+  VoidCallback onDonePressed;
+  VoidCallback onUpButtonPressed;
+  VoidCallback onDownButtonPressed;
 
-  TaskView(this.task, {super.key});
+  TaskView({
+    required this.task,
+    required this.onEditPressed,
+    required this.onDonePressed,
+    required this.onUpButtonPressed,
+    required this.onDownButtonPressed,
+    super.key
+    });
 
   @override
   State<TaskView> createState() => _TaskViewState(task);
@@ -51,7 +62,7 @@ class _TaskViewState extends State<TaskView> {
                 "Done!",
                 textScaleFactor: 0.9,
               ),
-              onPressed: () => {},
+              onPressed: widget.onDonePressed,
             )
           ])
         ]),
@@ -60,9 +71,9 @@ class _TaskViewState extends State<TaskView> {
       Expanded(
         flex: 1,
         child: Column(children: [
-          IconButton(onPressed: () => {}, icon: const Icon(Icons.arrow_upward)),
+          IconButton(onPressed: widget.onUpButtonPressed, icon: const Icon(Icons.arrow_upward)),
           IconButton(
-              onPressed: () => {}, icon: const Icon(Icons.arrow_downward)),
+              onPressed: widget.onDownButtonPressed, icon: const Icon(Icons.arrow_downward)),
         ]),
       )
     ]);
@@ -77,11 +88,11 @@ class _TaskViewState extends State<TaskView> {
       ),
       Row(
         children: [
-          TextButton(onPressed: () {
+          TextButton(
+              onPressed: () {
                 print(textController.text);
-          }, child: const Text("Save")),
-
-
+              },
+              child: const Text("Save")),
           TextButton(
               onPressed: () {
                 setState(() => inReadMode = true);

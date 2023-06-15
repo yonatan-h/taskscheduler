@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\gedie\Desktop\Gedi\taskscheduler\build\windows\CMakeFiles\d2667e7aa5bc65d28839c0e177974922\flutter_windows.dll.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\gedie\Desktop\Gedi\taskscheduler\build\windows\CMakeFiles\cc38bda75a10475a1c06803f58ec6fcd\flutter_assemble.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\gedie\Desktop\Gedi\taskscheduler\windows\flutter\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\gedie\Desktop\Gedi\taskscheduler\build\windows\flutter\CMakeFiles\flutter_assemble" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{F5AD3672-C140-349F-AB29-C9EE79DBFED7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
