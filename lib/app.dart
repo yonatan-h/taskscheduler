@@ -56,6 +56,9 @@ class TaskSchedulerScreen extends StatelessWidget {
           return ListView(
             children: tasks.map((e) {
               return TaskView(
+                inReadMode: true,
+
+                ////////////////
                     task: Task(content: e.content, reminderTime: e.reminderTime),
                     onEditPressed: () {},
                     onDonePressed: () {},

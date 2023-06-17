@@ -1,33 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_scheduler/bloc/tasks_bloc.dart';
 import 'package:task_scheduler/models/task.dart';
 
-class TaskView extends StatefulWidget {
+class TaskView extends StatelessWidget {
   Task task;
   VoidCallback onEditPressed;
   VoidCallback onDonePressed;
   VoidCallback onUpButtonPressed;
   VoidCallback onDownButtonPressed;
 
-  TaskView({
-    required this.task,
-    required this.onEditPressed,
-    required this.onDonePressed,
-    required this.onUpButtonPressed,
-    required this.onDownButtonPressed,
-    super.key
-    });
+  bool inReadMode;
 
-  @override
-  State<TaskView> createState() => _TaskViewState(task);
-}
+  TaskView(
+      {required this.inReadMode,
+      required this.task,
+      required this.onEditPressed,
+      required this.onDonePressed,
+      required this.onUpButtonPressed,
+      required this.onDownButtonPressed,
+      super.key}) {
+    // createState();
+  }
 
-class _TaskViewState extends State<TaskView> {
-  Task task;
   TextEditingController textController = TextEditingController();
-
-  _TaskViewState(this.task);
-
-  bool inReadMode = true;
 
   Widget readMode() {
     return Row(children: [
@@ -47,7 +43,7 @@ class _TaskViewState extends State<TaskView> {
                 textScaleFactor: 0.9,
               ),
               onPressed: () {
-                setState(() => inReadMode = false);
+                // setState(() => inReadMode = false);
               },
             ),
             TextButton(
@@ -62,7 +58,7 @@ class _TaskViewState extends State<TaskView> {
                 "Done!",
                 textScaleFactor: 0.9,
               ),
-              onPressed: widget.onDonePressed,
+              onPressed: onDonePressed,
             )
           ])
         ]),
@@ -71,9 +67,12 @@ class _TaskViewState extends State<TaskView> {
       Expanded(
         flex: 1,
         child: Column(children: [
-          IconButton(onPressed: widget.onUpButtonPressed, icon: const Icon(Icons.arrow_upward)),
           IconButton(
-              onPressed: widget.onDownButtonPressed, icon: const Icon(Icons.arrow_downward)),
+              onPressed: onUpButtonPressed,
+              icon: const Icon(Icons.arrow_upward)),
+          IconButton(
+              onPressed: onDownButtonPressed,
+              icon: const Icon(Icons.arrow_downward)),
         ]),
       )
     ]);
@@ -95,7 +94,7 @@ class _TaskViewState extends State<TaskView> {
               child: const Text("Save")),
           TextButton(
               onPressed: () {
-                setState(() => inReadMode = true);
+                // setState(() => inReadMode = true);
               },
               child: const Text("Cancel"))
         ],
