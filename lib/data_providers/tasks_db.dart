@@ -21,11 +21,11 @@ class TasksDataProvider {
     (await db).execute(createTableQuery);
 
     //checking
-    replaceTasks([
-      Task(content: "Watch spiderman", reminderTime: DateTime.now()),
-      Task(content: "Do some coding", reminderTime: DateTime.now()),
-      Task(content: "Workout", reminderTime: DateTime.now())
-    ]);
+    // replaceTasks([
+    //   Task(content: "Watch spiderman", reminderTime: DateTime.now()),
+    //   Task(content: "Do some coding", reminderTime: DateTime.now()),
+    //   Task(content: "Workout", reminderTime: DateTime.now())
+    // ]);
     print(getTasks());
   }
 

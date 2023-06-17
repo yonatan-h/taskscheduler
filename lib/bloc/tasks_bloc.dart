@@ -28,6 +28,8 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     emit(TasksLoading());
     try {
       List<Task> taskList = await tasksDataProvider.getTasks();
+      await notificationsDataProvider.replaceReminders(taskList);
+      
       if (taskList.isEmpty) {
         emit(NoTasks());
       } else {
