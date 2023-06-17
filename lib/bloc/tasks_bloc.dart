@@ -19,8 +19,6 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     emit(TasksLoading());
     try {
       List<Task> taskList = await dataProvider.getTasks();
-      taskList
-          .add(Task(content: "Watch spiderman", reminderTime: DateTime.now()));
       if (taskList.isEmpty) {
         emit(NoTasks());
       } else {
@@ -51,16 +49,20 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     if (state is TasksLoaded) {
       print("Someone is being called here");
       final _state = state as TasksLoaded;
+      int index = 0;
+      while (_state.task[index].id! != event.id) {
+        index++;
+      }
       List<Task> orderedTask = List.of(_state.task);
-      if (event.direction == MovementDirection.up && event.index > 0) {
-        Task temp = orderedTask[event.index];
-        orderedTask[event.index] = orderedTask[event.index - 1];
-        orderedTask[event.index - 1] = temp;
+      if (event.direction == MovementDirection.up && index > 0) {
+        Task temp = orderedTask[index];
+        orderedTask[index] = orderedTask[index - 1];
+        orderedTask[index - 1] = temp;
       } else if (event.direction == MovementDirection.down &&
-          event.index < orderedTask.length - 1) {
-        Task temp = orderedTask[event.index];
-        orderedTask[event.index] = orderedTask[event.index + 1];
-        orderedTask[event.index + 1] = temp;
+          index < orderedTask.length - 1) {
+        Task temp = orderedTask[index];
+        orderedTask[index] = orderedTask[index + 1];
+        orderedTask[index + 1] = temp;
       }
 
       await dataProvider.replaceTasks(orderedTask);

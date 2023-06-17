@@ -23,13 +23,13 @@ class CreateNewTask extends TasksEvent {
 class EditTasks extends TasksEvent {}
 
 class MoveTask extends TasksEvent {
-  final int index;
+  final int id;
   final MovementDirection direction;
 
-  MoveTask(this.index, this.direction);
+  MoveTask(this.id, this.direction);
 
   @override
-  List<Object> get props => [index, direction];
+  List<Object> get props => [id, direction];
 }
 
 enum MovementDirection { up, down }
