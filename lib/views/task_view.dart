@@ -14,19 +14,16 @@ class TaskView extends StatelessWidget {
 
   TaskView(
       {
-        ////////////
-        required this.inReadMode,
-        ////////////
-
+      ////////////
+      required this.inReadMode,
+      ////////////
 
       required this.task,
       required this.onEditPressed,
       required this.onDonePressed,
       required this.onUpButtonPressed,
       required this.onDownButtonPressed,
-      super.key}) {
-    // createState();
-  }
+      super.key});
 
   TextEditingController textController = TextEditingController();
 
@@ -47,9 +44,7 @@ class TaskView extends StatelessWidget {
                 "Edit",
                 textScaleFactor: 0.9,
               ),
-              onPressed: () {
-                // setState(() => inReadMode = false);
-              },
+              onPressed: onEditPressed
             ),
             TextButton(
               child: const Text(
