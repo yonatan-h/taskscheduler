@@ -2,34 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:task_scheduler/app.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_scheduler/bloc/tasks_bloc.dart';
-import 'package:task_scheduler/db.dart';
+import 'package:task_scheduler/data_providers/tasks_db.dart';
+import 'package:task_scheduler/data_providers/notifications_db.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
-void main() {
+void main() async {
+  await initializeNotifications();
   runApp(TaskApp());
 }
 
-void initializeNotifications() {
+initializeNotifications() async {
   String? defaultIcon = null;
   List<NotificationChannel> channels = [
     NotificationChannel(
         channelGroupKey: 'reminders',
-        channelKey: 'instant_notification',
-        channelName: 'Basic Instant Notification',
-        channelDescription: 'I can instant notify you')
+        channelKey: 'channel',
+        channelName: 'Task Scheduler Reminders',
+        channelDescription:
+            'Notifies according to the reminder set for a task.')
   ];
   var awesomeNotifications = AwesomeNotifications();
-  awesomeNotifications.initialize(defaultIcon, channels);
+  await awesomeNotifications.initialize(defaultIcon, channels);
 }
 
 class TaskApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => DataProvider(),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (context) => TasksDataProvider()),
+        RepositoryProvider(create: (context) => NotificationsDataProvider()),
+      ],
       child: BlocProvider(
-        create: (context) =>
-            TasksBloc(dataProvider: context.read<DataProvider>()),
+        create: (context) => TasksBloc(
+            tasksDataProvider: context.read<TasksDataProvider>(),
+            notificationsDataProvider:
+                context.read<NotificationsDataProvider>()),
         child: MaterialApp(
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),

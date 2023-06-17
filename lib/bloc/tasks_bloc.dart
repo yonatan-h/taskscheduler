@@ -1,14 +1,19 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:task_scheduler/data_providers/notifications_db.dart';
+import 'package:task_scheduler/data_providers/tasks_db.dart';
 import 'package:task_scheduler/models/task.dart';
-import 'package:task_scheduler/db.dart';
 
 part 'tasks_event.dart';
 part 'tasks_state.dart';
 
 class TasksBloc extends Bloc<TasksEvent, TasksState> {
-  DataProvider dataProvider;
-  TasksBloc({required this.dataProvider}) : super(TasksInitial()) {
+  TasksDataProvider tasksDataProvider;
+  NotificationsDataProvider notificationsDataProvider;
+  TasksBloc(
+      {required this.tasksDataProvider,
+      required this.notificationsDataProvider})
+      : super(TasksInitial()) {
     on<GetTasksFromDataBase>(_fecthData);
     on<CreateNewTask>(_createTask);
     on<EditTasks>(_editTasks);
@@ -18,7 +23,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
   _fecthData(event, emit) async {
     emit(TasksLoading());
     try {
-      List<Task> taskList = await dataProvider.getTasks();
+      List<Task> taskList = await tasksDataProvider.getTasks();
       if (taskList.isEmpty) {
         emit(NoTasks());
       } else {
@@ -65,7 +70,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
         orderedTask[index + 1] = temp;
       }
 
-      await dataProvider.replaceTasks(orderedTask);
+      await tasksDataProvider.replaceTasks(orderedTask);
       emit(TasksLoaded(task: orderedTask, status: TaskProgress.None));
     }
   }

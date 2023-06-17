@@ -13,7 +13,12 @@ class TaskView extends StatelessWidget {
   bool inReadMode;
 
   TaskView(
-      {required this.inReadMode,
+      {
+        ////////////
+        required this.inReadMode,
+        ////////////
+
+
       required this.task,
       required this.onEditPressed,
       required this.onDonePressed,

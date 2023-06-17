@@ -1,6 +1,4 @@
-import 'dart:math';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_scheduler/models/task.dart';
@@ -79,12 +77,14 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                 children: [
                   DummyReminder(),
                   TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         var isValid = formKey.currentState!.validate();
                         if (isValid) {
                           formKey.currentState!.save();
                           var task = Task(
                               content: content, reminderTime: reminderTime);
+
+                          
                           print(
                               'new Task -> content:${task.content} and reminder:${task.reminderTime}');
                         }
@@ -110,15 +110,7 @@ class DummyReminder extends StatelessWidget {
       children: [
         TextButton(
             onPressed: () async {
-              print('3 seconds away');
-              var awesomeNotifications = AwesomeNotifications();
-              var notificationContent = NotificationContent(
-                id: Random().nextInt(100),
-                channelKey: "instant_notification",
-                title: "Abebe?",
-                body: "I am the hello world of every thing!"
-                );
-              awesomeNotifications.createNotification(content: notificationContent);
+              //
             },
             child: Text('3seconds')),
       ],
