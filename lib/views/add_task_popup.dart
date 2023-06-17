@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:task_scheduler/models/task.dart';
@@ -19,85 +18,73 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text("Create Task"),
-      content: Form(
-        key: formKey,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Center(
+        child: IntrinsicHeight(
+      child: AlertDialog(
+        title: Text("Create Task"),
+        content: Form(
+          key: formKey,
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                children: [
-                  TextFormField(
-                      decoration: InputDecoration(hintText: "Enter the task"),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please write something';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        print('-----------------is saved');
-                        content = value as String;
-                      }),
-                  const SizedBox(height: 20),
-                  Text(reminderTime == null
-                      ? "No Reminder"
-                      : DateFormat('EEEE MMMM d h:m a').format(reminderTime!)),
-                  TextButton(
-                      onPressed: () async {
-                        var now = DateTime.now();
-                        var after30days = now.add(Duration(days: 30));
-
-                        DateTime? selectedDate = await showDatePicker(
-                            context: context,
-                            initialDate: now,
-                            firstDate: now,
-                            lastDate: after30days);
-                        if (selectedDate == null) return;
-
-                        TimeOfDay? selectedTime = await showTimePicker(
-                            context: context, initialTime: TimeOfDay.now());
-                        if (selectedTime == null) return;
-
-                        setState(() {
-                          reminderTime = DateTime(
-                              selectedDate.year,
-                              selectedDate.month,
-                              selectedDate.day,
-                              selectedTime.hour,
-                              selectedTime.minute);
-                        });
-                      },
-                      child: Text('Set Reminder'))
-                ],
+              TextFormField(
+                decoration: InputDecoration(hintText: "Enter the task"),
+                validator: (value) => (value == null || value.isEmpty)
+                    ? 'Please write something'
+                    : null,
+                onSaved: (value) => content = value as String,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  DummyReminder(),
-                  TextButton(
-                      onPressed: () async {
-                        var isValid = formKey.currentState!.validate();
-                        if (isValid) {
-                          formKey.currentState!.save();
-                          var task = Task(
-                              content: content, reminderTime: reminderTime);
+              const SizedBox(height: 20),
+              Text(reminderTime == null
+                  ? "No Reminder"
+                  : DateFormat('EEEE MMMM d h:m a').format(reminderTime!)),
+              TextButton(
+                  onPressed: () async {
+                    var now = DateTime.now();
+                    var after30days = now.add(Duration(days: 30));
 
-                          
-                          print(
-                              'new Task -> content:${task.content} and reminder:${task.reminderTime}');
-                        }
-                      },
-                      child: Text('Save')),
-                  TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('Cancel'))
-                ],
-              )
-            ]),
+                    DateTime? selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: now,
+                        firstDate: now,
+                        lastDate: after30days);
+                    if (selectedDate == null) return;
+
+                    TimeOfDay? selectedTime = await showTimePicker(
+                        context: context, initialTime: TimeOfDay.now());
+                    if (selectedTime == null) return;
+
+                    setState(() {
+                      reminderTime = DateTime(
+                          selectedDate.year,
+                          selectedDate.month,
+                          selectedDate.day,
+                          selectedTime.hour,
+                          selectedTime.minute);
+                    });
+                  },
+                  child: Text('Set Reminder'))
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () async {
+                var isValid = formKey.currentState!.validate();
+                if (isValid) {
+                  formKey.currentState!.save();
+                  var task = Task(content: content, reminderTime: reminderTime);
+
+                  print(
+                      'new Task -> content:${task.content} and reminder:${task.reminderTime}');
+                }
+              },
+              child: Text('Save')),
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: Text('Cancel'))
+        ],
       ),
-    );
+    ));
   }
 }
 
