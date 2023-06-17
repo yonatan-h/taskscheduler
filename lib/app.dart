@@ -9,17 +9,48 @@ import 'package:task_scheduler/views/task_view.dart';
 class TaskSchedulerScreen extends StatelessWidget {
   TaskSchedulerScreen({super.key});
 
-  Future<String?> _editTask(BuildContext context, String initalText) async {
-    TextEditingController textController = TextEditingController(text: initalText);
-    return showDialog<String>(
+  Future<Task?> _editTask(BuildContext context, Task task) async {
+    TextEditingController textController = TextEditingController(text:task.content);
+    return showDialog<Task>(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text('Edit Tasks'),
-              content: TextFormField(controller: textController),
+              title: Text('Edit Task'),
+              content: Column(
+                children: [
+                  TextFormField(
+                    controller: textController,
+                  ),
+                  TextButton(
+                      onPressed: () async {
+                        var now = DateTime.now();
+                        var after30days = now.add(Duration(days: 30));
+
+                        DateTime? selectedDate = await showDatePicker(
+                            context: context,
+                            initialDate: now,
+                            firstDate: now,
+                            lastDate: after30days);
+                        if (selectedDate == null) return;
+
+                        TimeOfDay? selectedTime = await showTimePicker(
+                            context: context, initialTime: TimeOfDay.now());
+                        if (selectedTime == null) return;
+
+                        task.reminderTime = DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            selectedTime.hour,
+                            selectedTime.minute);
+                      },
+                      child: Text('Set Reminder'))
+                ],
+              ),
               actions: [
                 TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop(textController.text);
+                      task.content = textController.text;
+                      Navigator.of(context).pop(task);
                     },
                     child: Text('Done'))
               ],
@@ -63,6 +94,10 @@ class TaskSchedulerScreen extends StatelessWidget {
           return Center(
             child: Text('Wohoo No tasks yet...'),
           );
+        } else if (state is TaskSuccess) {
+          return Center(
+            child: Text('adding task ...'),
+          );
         } else if (state is TaskError) {
           return Center(
             child: Text('Hmm Something is wrong please try again'),
@@ -81,9 +116,12 @@ class TaskSchedulerScreen extends StatelessWidget {
                   ////////////////
                   task: Task(content: e.content, reminderTime: e.reminderTime),
                   onEditPressed: () async {
-                    final updatedTask = await _editTask(context, e.content);
+                    final updatedTask = await _editTask(context, e);
                     if (updatedTask != null) {
-                      bloc.add(EditTasks(id: e.id!, updatedTask: updatedTask, updatedReminder: null));
+                      bloc.add(EditTasks(
+                          id: e.id!,
+                          updatedTask: updatedTask.content,
+                          updatedReminder: updatedTask.reminderTime));
                     }
                   },
                   onDonePressed: () {
@@ -105,15 +143,68 @@ class TaskSchedulerScreen extends StatelessWidget {
 }
 
 class TaskSchedulerApp extends StatelessWidget {
+  Future<Task?> _createTask(BuildContext context) async {
+    TextEditingController textController = TextEditingController();
+    DateTime? reminderTime;
+    return showDialog<Task>(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Create Task'),
+              content: Column(
+                children: [
+                  TextFormField(controller: textController),
+                  TextButton(
+                      onPressed: () async {
+                        var now = DateTime.now();
+                        var after30days = now.add(Duration(days: 30));
+
+                        DateTime? selectedDate = await showDatePicker(
+                            context: context,
+                            initialDate: now,
+                            firstDate: now,
+                            lastDate: after30days);
+                        if (selectedDate == null) return;
+
+                        TimeOfDay? selectedTime = await showTimePicker(
+                            context: context, initialTime: TimeOfDay.now());
+                        if (selectedTime == null) return;
+
+                        reminderTime = DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            selectedTime.hour,
+                            selectedTime.minute);
+                      },
+                      child: Text('Set Reminder'))
+                ],
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      var task = Task(
+                          content: textController.text,
+                          reminderTime: reminderTime);
+                      Navigator.of(context).pop(task);
+                    },
+                    child: Text('Done'))
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Task Scheduler")),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () =>
-            showDialog(context: context, builder: (context) => AddTaskPopup()),
-      ),
+          child: const Icon(Icons.add),
+          onPressed: () async {
+            final bloc = context.read<TasksBloc>();
+            var task = await _createTask(context);
+            print('here');
+            if (task == null) return;
+            bloc.add(CreateNewTask(task));
+          }),
       body: TaskSchedulerScreen(),
     );
   }

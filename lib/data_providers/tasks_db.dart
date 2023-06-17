@@ -25,7 +25,6 @@ class TasksDataProvider {
       Task(content: "Watch spiderman", reminderTime: DateTime.now()),
       Task(content: "Do some coding", reminderTime: DateTime.now()),
       Task(content: "Workout", reminderTime: DateTime.now())
-
     ]);
     print(getTasks());
   }
@@ -39,10 +38,11 @@ class TasksDataProvider {
     List<Map<String, Object?>> taskMaps = await (await db).query("tasks");
     List<Task> tasks = taskMaps
         .map((taskThing) {
+          print("fetching... -> $taskThing");
           return {
             "id": taskThing["id"] as int,
             "content": taskThing["content"] as String,
-            "reminderTime": taskThing["reminderTime"] as String
+            "reminderTime": taskThing["reminderTime"]
           };
         })
         .map((taskMap) => Task.fromMap(taskMap))

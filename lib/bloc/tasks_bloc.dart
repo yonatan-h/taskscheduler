@@ -14,11 +14,15 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       {required this.tasksDataProvider,
       required this.notificationsDataProvider})
       : super(TasksInitial()) {
+    notificationsDataProvider.stream
+        .listen((event) => add(ReminderDisplayed()));
+
     on<GetTasksFromDataBase>(_fecthData);
     on<CreateNewTask>(_createTask);
     on<EditTasks>(_editTasks);
     on<MoveTask>(_reorderTasks);
     on<DoneTask>(_deleteTask);
+    on<ReminderDisplayed>(_refreshReminders);
   }
   _fecthData(event, emit) async {
     emit(TasksLoading());
@@ -29,19 +33,29 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       } else {
         emit(TasksLoaded(task: taskList, status: TaskProgress.None));
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print(e);
+      print(stack);
       emit(TaskError());
     }
   }
 
   _createTask(CreateNewTask event, emit) async {
-    if (state is TasksLoaded) {
+    if (state is TasksLoaded || state is NoTasks) {
       final Task taskCreated = event.newTask;
-      final List<Task> newTaskList = List.of((state as TasksLoaded).task);
+      List<Task> newTaskList = [];
+
+      if (state is TasksLoaded) {
+        newTaskList = List.of((state as TasksLoaded).task);
+      }
 
       newTaskList.add(taskCreated);
       emit(TaskSuccess());
       await Future.delayed(Duration(seconds: 1));
+
+      await notificationsDataProvider.replaceReminders(newTaskList);
+      await tasksDataProvider.replaceTasks(newTaskList);
+      newTaskList = await tasksDataProvider.getTasks();
 
       emit(TasksLoaded(task: newTaskList, status: TaskProgress.Create));
     }
@@ -55,8 +69,12 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       while (newTask[index].id != event.id) index++;
       newTask[index].content = event.updatedTask;
 
-      await tasksDataProvider.replaceTasks(newTask);
       emit(TasksLoading());
+
+      await notificationsDataProvider.replaceReminders(newTask);
+      await tasksDataProvider.replaceTasks(newTask);
+      newTask = await tasksDataProvider.getTasks();
+
       await Future.delayed(Duration(seconds: 0));
       emit(TasksLoaded(task: newTask, status: TaskProgress.Edit));
     }
@@ -81,7 +99,10 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
         orderedTask[index + 1] = temp;
       }
 
+      await notificationsDataProvider.replaceReminders(orderedTask);
       await tasksDataProvider.replaceTasks(orderedTask);
+      orderedTask = await tasksDataProvider.getTasks();
+
       emit(TasksLoaded(task: orderedTask, status: TaskProgress.None));
     }
   }
@@ -93,11 +114,32 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       int index = 0;
       while (newTaskList[index].id != event.id) index++;
       newTaskList.removeAt(index);
+
+      await notificationsDataProvider.replaceReminders(newTaskList);
+      await tasksDataProvider.replaceTasks(newTaskList);
+      newTaskList = await tasksDataProvider.getTasks();
+
       if (newTaskList.isEmpty)
         emit(NoTasks());
       else {
         emit(TasksLoaded(task: newTaskList, status: TaskProgress.Done));
       }
+    }
+  }
+
+  _refreshReminders(ReminderDisplayed event, emit) async {
+    print('refresh is called');
+    if (state is TasksLoaded) {
+      final _state = state as TasksLoaded;
+      List<Task> tasks = List.of(_state.task);
+
+      emit(TasksLoading());
+
+      await notificationsDataProvider.replaceReminders(tasks);
+      await tasksDataProvider.replaceTasks(tasks);
+      tasks = await tasksDataProvider.getTasks();
+
+      emit(TasksLoaded(task: tasks, status: TaskProgress.None));
     }
   }
 }

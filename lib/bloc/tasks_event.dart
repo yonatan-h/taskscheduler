@@ -54,3 +54,6 @@ class DoneTask extends TasksEvent {
   @override
   List<Object> get props => [id,];
 }
+
+
+class ReminderDisplayed extends TasksEvent{}

@@ -10,11 +10,19 @@ class NotificationsDataProvider {
     await awesomeNotifications.cancelAllSchedules();
     List<Future<void>> setReminderFutures = [];
     for (Task task in tasks) {
+      nullIfPast(task);
       if (task.reminderTime == null) continue;
       setReminderFutures.add(_setReminder(task));
     }
 
     await Future.wait(setReminderFutures);
+  }
+
+  nullIfPast(Task task) {
+    if (task.reminderTime == null) return;
+    if (DateTime.now().compareTo(task.reminderTime!) >= 0) {
+      task.reminderTime = null;
+    }
   }
 
   Future<void> _setReminder(Task task) async {
@@ -40,5 +48,9 @@ class NotificationsDataProvider {
 
     await awesomeNotifications.createNotification(
         schedule: notificationCalander, content: notificationContent);
+  }
+
+  Stream get stream {
+    return awesomeNotifications.displayedStream;
   }
 }

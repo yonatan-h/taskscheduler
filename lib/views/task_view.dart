@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:task_scheduler/bloc/tasks_bloc.dart';
 import 'package:task_scheduler/models/task.dart';
 
@@ -32,34 +33,24 @@ class TaskView extends StatelessWidget {
       //
       Expanded(
         flex: 3,
-        child: Column(children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            task.reminderTime == null
+                ? "No Reminder"
+                : DateFormat('MMMM d  h:mm a').format(task.reminderTime!),
+            textScaleFactor: 0.9,
+            style: TextStyle(color: Colors.grey),
+          ),
+
           Text(
             task.content,
             softWrap: true,
           ),
-          const SizedBox(height: 10),
+
+          // const SizedBox(height: 10),
           Row(children: [
-            TextButton(
-              child: const Text(
-                "Edit",
-                textScaleFactor: 0.9,
-              ),
-              onPressed: onEditPressed
-            ),
-            TextButton(
-              child: const Text(
-                "Reminder",
-                textScaleFactor: 0.9,
-              ),
-              onPressed: () => {},
-            ),
-            TextButton(
-              child: const Text(
-                "Done!",
-                textScaleFactor: 0.9,
-              ),
-              onPressed: onDonePressed,
-            )
+            TextButton(child: Text('Edit'), onPressed: onEditPressed),
+            TextButton(child: Text('Done'), onPressed: onDonePressed),
           ])
         ]),
       ),
