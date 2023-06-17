@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_scheduler/bloc/tasks_bloc.dart';
+import 'package:task_scheduler/models/task.dart';
 import 'package:task_scheduler/views/add_task_popup.dart';
 import 'package:task_scheduler/views/task_view.dart';
 
@@ -52,20 +53,21 @@ class TaskSchedulerScreen extends StatelessWidget {
             taskName.add(i.content);
           }
           print(taskName);
-          return ListView.builder(
-              itemCount: tasks.length,
-              itemBuilder: (context, index) {
-                return TaskView(
-                    task: tasks[index],
+          return ListView(
+            children: tasks.map((e) {
+              return TaskView(
+                    task: Task(content: e.content, reminderTime: e.reminderTime),
                     onEditPressed: () {},
                     onDonePressed: () {},
                     onUpButtonPressed: () {
-                      bloc.add(MoveTask(index, MovementDirection.up));
+                      bloc.add(MoveTask(e.id!, MovementDirection.up));
                     },
                     onDownButtonPressed: () {
-                      bloc.add(MoveTask(index, MovementDirection.down));
+                      bloc.add(MoveTask(e.id!, MovementDirection.down));
                     });
-              },
+            }).toList() as List<Widget>,
+                
+              
           );
         }
         throw Exception("Unhandled State");
