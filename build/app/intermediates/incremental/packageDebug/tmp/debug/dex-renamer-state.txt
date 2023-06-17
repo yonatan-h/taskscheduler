@@ -1,4 +1,4 @@
-#Thu Jun 15 12:01:49 EAT 2023
-base.0=C\:\\Users\\gedie\\Desktop\\Gedi\\taskscheduler\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+#Sat Jun 17 12:20:19 EAT 2023
+base.0=/home/yonatan/Desktop/3-2-semester/mobile/taskscheduler/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

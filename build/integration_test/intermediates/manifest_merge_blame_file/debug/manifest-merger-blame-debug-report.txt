@@ -9,8 +9,8 @@
 9
 10    <uses-sdk
 11        android:minSdkVersion="16"
-11-->C:\src\flutter\packages\integration_test\android\src\main\AndroidManifest.xml
+11-->/home/yonatan/flutter-home/flutter/packages/integration_test/android/src/main/AndroidManifest.xml
 12        android:targetSdkVersion="16" />
-12-->C:\src\flutter\packages\integration_test\android\src\main\AndroidManifest.xml
+12-->/home/yonatan/flutter-home/flutter/packages/integration_test/android/src/main/AndroidManifest.xml
 13
 14</manifest>

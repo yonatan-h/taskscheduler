@@ -1,7 +1,7 @@
 class Task {
   int? id;
   String content;
-  DateTime reminderTime;
+  DateTime? reminderTime;
 
   Task({required this.content, required this.reminderTime, this.id});
   Task.fromMap(Map<String, Object> map)
@@ -9,10 +9,10 @@ class Task {
         content = map["content"] as String,
         reminderTime = DateTime.parse(map["reminderTime"] as String);
 
-  Map<String, Object> toMap() {
-    Map<String, Object> map = {
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {
       "content": content,
-      "reminderTime": reminderTime.toIso8601String()
+      "reminderTime": reminderTime?.toIso8601String()
     //no id when saving to db
     };
 
