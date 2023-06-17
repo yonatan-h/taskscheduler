@@ -9,15 +9,36 @@ import 'package:task_scheduler/views/task_view.dart';
 class TaskSchedulerScreen extends StatelessWidget {
   TaskSchedulerScreen({super.key});
 
-  // List<Task> tasks = [
-  //   Task(
-  //       content: "abebe endezi keza indezi keza indexi keza beka indeza",
-  //       reminderTime: DateTime.now()),
-  //   Task(content: "abebe", reminderTime: DateTime.now()),
-  //   Task(content: "abebe", reminderTime: DateTime.now()),
-  //   Task(content: "abebe", reminderTime: DateTime.now()),
-  //   Task(content: "abebe", reminderTime: DateTime.now()),
-  // ];
+  Future<String?> _editTask(BuildContext context, String initalText) async {
+    TextEditingController textController = TextEditingController(text: initalText);
+    return showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Edit Tasks'),
+              content: TextFormField(controller: textController),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(textController.text);
+                    },
+                    child: Text('Done'))
+              ],
+            ));
+  }
+
+  //FOR SNACK BAR DO NOT DELETE
+  // _showStatus(BuildContext context, TaskProgress status) {
+  //   Map<TaskProgress, String> messages = {
+  //     TaskProgress.Create: "Successfully created a new Task",
+  //     TaskProgress.Edit: "Successfully edited task",
+  //     TaskProgress.Done: "Well done completing a task!",
+  //   };
+  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //     content: Text(messages[status]!),
+  //     duration: Duration(seconds: 2),
+  //     backgroundColor: Colors.green,
+  //   ));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -56,21 +77,25 @@ class TaskSchedulerScreen extends StatelessWidget {
           return ListView(
             children: tasks.map((e) {
               return TaskView(
-                inReadMode: true,
-
-                ////////////////
-                    task: Task(content: e.content, reminderTime: e.reminderTime),
-                    onEditPressed: () {},
-                    onDonePressed: () {},
-                    onUpButtonPressed: () {
-                      bloc.add(MoveTask(e.id!, MovementDirection.up));
-                    },
-                    onDownButtonPressed: () {
-                      bloc.add(MoveTask(e.id!, MovementDirection.down));
-                    });
+                  inReadMode: true,
+                  ////////////////
+                  task: Task(content: e.content, reminderTime: e.reminderTime),
+                  onEditPressed: () async {
+                    final updatedTask = await _editTask(context, e.content);
+                    if (updatedTask != null) {
+                      bloc.add(EditTasks(id: e.id!, updatedTask: updatedTask, updatedReminder: null));
+                    }
+                  },
+                  onDonePressed: () {
+                    bloc.add(DoneTask(e.id!));
+                  },
+                  onUpButtonPressed: () {
+                    bloc.add(MoveTask(e.id!, MovementDirection.up));
+                  },
+                  onDownButtonPressed: () {
+                    bloc.add(MoveTask(e.id!, MovementDirection.down));
+                  });
             }).toList() as List<Widget>,
-                
-              
           );
         }
         throw Exception("Unhandled State");

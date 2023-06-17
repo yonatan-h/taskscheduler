@@ -47,12 +47,23 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     }
   }
 
-  _editTasks(event, emit) {
-    //pass for now
+  _editTasks(EditTasks event, emit) async {
+    if (state is TasksLoaded) {
+      int index = 0;
+      final _state = state as TasksLoaded;
+      List<Task> newTask = List.of(_state.task);
+      while (newTask[index].id != event.id) index++;
+      newTask[index].content = event.updatedTask;
+
+      await tasksDataProvider.replaceTasks(newTask);
+      emit(TasksLoading());
+      await Future.delayed(Duration(seconds: 0));
+      emit(TasksLoaded(task: newTask, status: TaskProgress.Edit));
+    }
   }
+
   _reorderTasks(MoveTask event, emit) async {
     if (state is TasksLoaded) {
-      print("Someone is being called here");
       final _state = state as TasksLoaded;
       int index = 0;
       while (_state.task[index].id! != event.id) {
@@ -79,7 +90,9 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     if (state is TasksLoaded) {
       final _state = state as TasksLoaded;
       List<Task> newTaskList = List.of(_state.task);
-      newTaskList.removeAt(event.index);
+      int index = 0;
+      while (newTaskList[index].id != event.id) index++;
+      newTaskList.removeAt(index);
       if (newTaskList.isEmpty)
         emit(NoTasks());
       else {

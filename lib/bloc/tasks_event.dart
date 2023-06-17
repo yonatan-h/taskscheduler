@@ -20,7 +20,19 @@ class CreateNewTask extends TasksEvent {
   List<Object> get props => [newTask];
 }
 
-class EditTasks extends TasksEvent {}
+class EditTasks extends TasksEvent {
+  final int id;
+  final String updatedTask;
+  final DateTime? updatedReminder;
+
+  EditTasks({
+    required this.id,
+    required this.updatedTask,
+    required this.updatedReminder
+    });
+
+  
+}
 
 class MoveTask extends TasksEvent {
   final int id;
@@ -35,11 +47,10 @@ class MoveTask extends TasksEvent {
 enum MovementDirection { up, down }
 
 class DoneTask extends TasksEvent {
-  final int index;
+  final int id;
 
-  DoneTask(this.index);
-  
+  DoneTask(this.id);
+
   @override
-  List<Object> get props => [index,];
-
+  List<Object> get props => [id,];
 }
