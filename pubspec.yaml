@@ -41,6 +41,7 @@ dependencies:
   equatable: ^2.0.5
   intl: ^0.18.1
   awesome_notifications: ^0.6.19
+  flutter_local_notifications: ^14.1.1
 
 dev_dependencies:
   integration_test:

@@ -59,17 +59,21 @@ class TaskSchedulerScreen extends StatelessWidget {
   }
 
   //FOR SNACK BAR DO NOT DELETE
-  _showStatus(BuildContext context, TaskProgress status) {
+  _showStatus(BuildContext context, TaskProgress status, Task? task) {
     Map<TaskProgress, String> messages = {
       TaskProgress.Create: "Successfully created a new Task",
       TaskProgress.Edit: "Successfully edited task",
       TaskProgress.Done: "Well done completing a task!",
     };
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(messages[status]!),
-      duration: Duration(seconds: 2),
-      backgroundColor: Colors.green,
-    ));
+    if (status != TaskProgress.Notification) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(messages[status]!),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.green,
+      ));
+    } else {
+      //
+    }
   }
 
   @override
@@ -84,6 +88,12 @@ class TaskSchedulerScreen extends StatelessWidget {
               color: Colors.pink,
             ),
           );
+        } else if (state is TaskNotification) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(state.task.content),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.blue,
+          ));
         } else if (state is TasksLoading) {
           return Center(
             child: CircularProgressIndicator(
@@ -102,8 +112,12 @@ class TaskSchedulerScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text('Adding task ...'),
-                SizedBox(height: 15,),
-                CircularProgressIndicator(color: Colors.pink,),
+                SizedBox(
+                  height: 15,
+                ),
+                CircularProgressIndicator(
+                  color: Colors.pink,
+                ),
               ],
             ),
           );
@@ -131,12 +145,12 @@ class TaskSchedulerScreen extends StatelessWidget {
                           id: e.id!,
                           updatedTask: updatedTask.content,
                           updatedReminder: updatedTask.reminderTime));
-                      _showStatus(context, TaskProgress.Edit);
+                      _showStatus(context, TaskProgress.Edit, null);
                     }
                   },
                   onDonePressed: () {
                     bloc.add(DoneTask(e.id!));
-                    _showStatus(context, TaskProgress.Done);
+                    _showStatus(context, TaskProgress.Done, null);
                   },
                   onUpButtonPressed: () {
                     bloc.add(MoveTask(e.id!, MovementDirection.up));

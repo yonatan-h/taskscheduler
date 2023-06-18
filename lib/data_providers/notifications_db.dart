@@ -27,6 +27,8 @@ class NotificationsDataProvider {
 
   Future<void> _setReminder(Task task) async {
     var notificationContent = NotificationContent(
+
+      
         id: Random().nextInt(100),
         wakeUpScreen: true,
         category: NotificationCategory.Reminder,
@@ -36,6 +38,7 @@ class NotificationsDataProvider {
 
     DateTime dateTime = task.reminderTime!;
     var notificationCalander = NotificationCalendar(
+      
       day: dateTime.day,
       month: dateTime.month,
       year: dateTime.year,

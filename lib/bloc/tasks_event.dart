@@ -25,13 +25,10 @@ class EditTasks extends TasksEvent {
   final String updatedTask;
   final DateTime? updatedReminder;
 
-  EditTasks({
-    required this.id,
-    required this.updatedTask,
-    required this.updatedReminder
-    });
-
-  
+  EditTasks(
+      {required this.id,
+      required this.updatedTask,
+      required this.updatedReminder});
 }
 
 class MoveTask extends TasksEvent {
@@ -52,8 +49,13 @@ class DoneTask extends TasksEvent {
   DoneTask(this.id);
 
   @override
-  List<Object> get props => [id,];
+  List<Object> get props => [
+        id,
+      ];
 }
 
-
-class ReminderDisplayed extends TasksEvent{}
+class ReminderDisplayed extends TasksEvent {
+  final Task task;
+  ReminderDisplayed(this.task);
+  
+}

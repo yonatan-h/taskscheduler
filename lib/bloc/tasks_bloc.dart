@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:task_scheduler/data_providers/notifications_db.dart';
@@ -14,8 +15,15 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       {required this.tasksDataProvider,
       required this.notificationsDataProvider})
       : super(TasksInitial()) {
-    notificationsDataProvider.stream
-        .listen((event) => add(ReminderDisplayed()));
+    notificationsDataProvider.stream.listen((event) {
+      final _event = event as ReceivedNotification;
+      print(_event);
+      print(_event.payload);
+
+      final task = Task(content: _event.payload!["body"]!, reminderTime: null);
+
+      add(ReminderDisplayed(task));
+    });
 
     on<GetTasksFromDataBase>(_fecthData);
     on<CreateNewTask>(_createTask);
@@ -29,7 +37,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     try {
       List<Task> taskList = await tasksDataProvider.getTasks();
       await notificationsDataProvider.replaceReminders(taskList);
-      
+
       if (taskList.isEmpty) {
         emit(NoTasks());
       } else {
@@ -140,6 +148,8 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       await notificationsDataProvider.replaceReminders(tasks);
       await tasksDataProvider.replaceTasks(tasks);
       tasks = await tasksDataProvider.getTasks();
+
+      emit(TaskNotification(event.task));
 
       emit(TasksLoaded(task: tasks, status: TaskProgress.None));
     }

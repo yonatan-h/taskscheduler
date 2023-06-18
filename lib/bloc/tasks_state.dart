@@ -31,4 +31,9 @@ class TasksFailure extends TasksState {}
 
 class NoTasks extends TasksState {}
 
-enum TaskProgress { Create, Done, Edit, None }
+enum TaskProgress { Create, Done, Edit, None, Notification }
+
+class TaskNotification extends TasksState {
+  final Task task;
+  TaskNotification(this.task);
+}

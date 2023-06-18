@@ -18,8 +18,11 @@ initializeNotifications() async {
         channelGroupKey: 'reminders',
         channelKey: 'channel',
         channelName: 'Task Scheduler Reminders',
+        importance: NotificationImportance.High,
+        channelShowBadge: true,  
+        defaultColor: Colors.pink,
         channelDescription:
-            'Notifies according to the reminder set for a task.')
+            'Notifies according to the reminder set for a task.'),
   ];
   var awesomeNotifications = AwesomeNotifications();
   await awesomeNotifications.initialize(defaultIcon, channels);
