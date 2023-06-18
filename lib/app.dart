@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_scheduler/background.dart';
 import 'package:task_scheduler/bloc/tasks_bloc.dart';
 import 'package:task_scheduler/models/task.dart';
 import 'package:task_scheduler/views/add_task_popup.dart';
 import 'package:task_scheduler/views/task_view.dart';
 
 class TaskSchedulerScreen extends StatelessWidget {
-  TaskSchedulerScreen({super.key});
+    TaskSchedulerScreen({super.key});
 
   Future<Task?> _editTask(BuildContext context, Task task) async {
     TextEditingController textController =
@@ -233,7 +234,6 @@ class TaskSchedulerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Task Scheduler")),
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () async {
@@ -245,7 +245,13 @@ class TaskSchedulerApp extends StatelessWidget {
             bloc.add(CreateNewTask(task));
             _showStatus(context, (state as TasksLoaded).status);
           }),
-      body: TaskSchedulerScreen(),
+      body: Stack(children: [
+        BackgroundCurveWidget(),
+        Container(
+          margin: EdgeInsets.only(top: 120),
+          child: TaskSchedulerScreen()
+          ),
+        ]),
     );
   }
 }
