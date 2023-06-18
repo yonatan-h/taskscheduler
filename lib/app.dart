@@ -10,7 +10,8 @@ class TaskSchedulerScreen extends StatelessWidget {
   TaskSchedulerScreen({super.key});
 
   Future<Task?> _editTask(BuildContext context, Task task) async {
-    TextEditingController textController = TextEditingController(text:task.content);
+    TextEditingController textController =
+        TextEditingController(text: task.content);
     return showDialog<Task>(
         context: context,
         builder: (context) => AlertDialog(
@@ -58,18 +59,18 @@ class TaskSchedulerScreen extends StatelessWidget {
   }
 
   //FOR SNACK BAR DO NOT DELETE
-  // _showStatus(BuildContext context, TaskProgress status) {
-  //   Map<TaskProgress, String> messages = {
-  //     TaskProgress.Create: "Successfully created a new Task",
-  //     TaskProgress.Edit: "Successfully edited task",
-  //     TaskProgress.Done: "Well done completing a task!",
-  //   };
-  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //     content: Text(messages[status]!),
-  //     duration: Duration(seconds: 2),
-  //     backgroundColor: Colors.green,
-  //   ));
-  // }
+  _showStatus(BuildContext context, TaskProgress status) {
+    Map<TaskProgress, String> messages = {
+      TaskProgress.Create: "Successfully created a new Task",
+      TaskProgress.Edit: "Successfully edited task",
+      TaskProgress.Done: "Well done completing a task!",
+    };
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(messages[status]!),
+      duration: Duration(seconds: 2),
+      backgroundColor: Colors.green,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +96,16 @@ class TaskSchedulerScreen extends StatelessWidget {
             child: Text('Wohoo No tasks yet...'),
           );
         } else if (state is TaskSuccess) {
-          return Center(
-            child: Text('adding task ...'),
+          return Container(
+            margin: EdgeInsets.only(top: 250),
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                Text('Adding task ...'),
+                SizedBox(height: 15,),
+                CircularProgressIndicator(color: Colors.pink,),
+              ],
+            ),
           );
         } else if (state is TaskError) {
           return Center(
@@ -122,10 +131,12 @@ class TaskSchedulerScreen extends StatelessWidget {
                           id: e.id!,
                           updatedTask: updatedTask.content,
                           updatedReminder: updatedTask.reminderTime));
+                      _showStatus(context, TaskProgress.Edit);
                     }
                   },
                   onDonePressed: () {
                     bloc.add(DoneTask(e.id!));
+                    _showStatus(context, TaskProgress.Done);
                   },
                   onUpButtonPressed: () {
                     bloc.add(MoveTask(e.id!, MovementDirection.up));
@@ -143,6 +154,19 @@ class TaskSchedulerScreen extends StatelessWidget {
 }
 
 class TaskSchedulerApp extends StatelessWidget {
+  _showStatus(BuildContext context, TaskProgress status) {
+    Map<TaskProgress, String> messages = {
+      TaskProgress.Create: "Successfully created a new Task",
+      TaskProgress.Edit: "Successfully edited task",
+      TaskProgress.Done: "Well done completing a task!",
+    };
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(messages[status]!),
+      duration: Duration(seconds: 2),
+      backgroundColor: Colors.green,
+    ));
+  }
+
   Future<Task?> _createTask(BuildContext context) async {
     TextEditingController textController = TextEditingController();
     DateTime? reminderTime;
@@ -200,10 +224,12 @@ class TaskSchedulerApp extends StatelessWidget {
           child: const Icon(Icons.add),
           onPressed: () async {
             final bloc = context.read<TasksBloc>();
+            final state = bloc.state;
             var task = await _createTask(context);
             print('here');
             if (task == null) return;
             bloc.add(CreateNewTask(task));
+            _showStatus(context, (state as TasksLoaded).status);
           }),
       body: TaskSchedulerScreen(),
     );
